@@ -23,17 +23,20 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(AccessibilityUtil.checkAccessibility(MainActivity.this)) {
-                    startService(
-                            new Intent(MainActivity.this, TrackerService.class)
-                                    .putExtra(TrackerService.COMMAND, TrackerService.COMMAND_OPEN)
-                    );
+                // 判断判断辅助功能是否开启
+                if (AccessibilityUtil.checkAccessibility(MainActivity.this)) {
+                    //启动服务  添加悬浮框
+                    startService(new Intent(MainActivity.this, TrackerService.class)
+                            .putExtra(TrackerService.COMMAND, TrackerService.COMMAND_OPEN));
                     finish();
                 }
             }
         });
     }
 
+    /**
+     * 检测 悬浮框权限
+     */
     private void checkOverlayPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {

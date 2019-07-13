@@ -14,9 +14,6 @@ import android.widget.Toast;
 
 import de.greenrobot.event.EventBus;
 
-/**
- * Created by jinliangshan on 16/12/26.
- */
 public class FloatingView extends LinearLayout {
     public static final String TAG = "FloatingView";
 
@@ -29,7 +26,7 @@ public class FloatingView extends LinearLayout {
     public FloatingView(Context context) {
         super(context);
         mContext = context;
-        mWindowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         initView();
     }
 
@@ -43,10 +40,9 @@ public class FloatingView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, "关闭悬浮框", Toast.LENGTH_SHORT).show();
-                mContext.startService(
-                        new Intent(mContext, TrackerService.class)
-                                .putExtra(TrackerService.COMMAND, TrackerService.COMMAND_CLOSE)
-                );
+                //启动服务  关闭悬浮框
+                mContext.startService(new Intent(mContext, TrackerService.class)
+                        .putExtra(TrackerService.COMMAND, TrackerService.COMMAND_CLOSE));
             }
         });
     }
@@ -63,32 +59,39 @@ public class FloatingView extends LinearLayout {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEventMainThread(TrackerService.ActivityChangedEvent event){
+    /**
+     * 处理EventBus消息
+     */
+    public void onEventMainThread(TrackerService.ActivityChangedEvent event) {
         Log.d(TAG, "event:" + event.getPackageName() + ": " + event.getClassName());
-        String packageName = event.getPackageName(),
-                className = event.getClassName();
-
+        String packageName = event.getPackageName();
+        String className = event.getClassName();
         mTvPackageName.setText(packageName);
+        //展示类名   如果是和包名一样，去掉包名展示相对路径   如果不一样，展示完整路径
         mTvClassName.setText(
-                className.startsWith(packageName)?
-                className.substring(packageName.length()):
-                className
+                className.startsWith(packageName) ?
+                        className.substring(packageName.length()) :
+                        className
         );
     }
 
     Point preP, curP;
 
+    /**
+     * 处理触摸事件   移动悬浮框位置
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                preP = new Point((int)event.getRawX(), (int)event.getRawY());
+                preP = new Point((int) event.getRawX(), (int) event.getRawY());
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                curP = new Point((int)event.getRawX(), (int)event.getRawY());
-                int dx = curP.x - preP.x,
-                        dy = curP.y - preP.y;
+                curP = new Point((int) event.getRawX(), (int) event.getRawY());
+
+                int dx = curP.x - preP.x;
+                int dy = curP.y - preP.y;
 
                 WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) this.getLayoutParams();
                 layoutParams.x += dx;
@@ -98,7 +101,6 @@ public class FloatingView extends LinearLayout {
                 preP = curP;
                 break;
         }
-
         return false;
     }
 }

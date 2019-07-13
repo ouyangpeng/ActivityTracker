@@ -18,6 +18,13 @@ public class TrackerService extends AccessibilityService {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "onCreate");
+    }
+
+    @Override
+    protected void onServiceConnected() {
+        super.onServiceConnected();
+        Log.d(TAG, "onServiceConnected");
     }
 
     private void initTrackerWindowManager() {
@@ -37,23 +44,26 @@ public class TrackerService extends AccessibilityService {
             else if (command.equals(COMMAND_CLOSE))
                 mTrackerWindowManager.removeView();
         }
-
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onInterrupt() {
-
+        Log.d(TAG, "onInterrupt");
     }
 
+    /**
+     * 实现辅助功能
+     */
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         Log.d(TAG, "onAccessibilityEvent: " + event.getPackageName());
+        // 如果是窗口状态变化事件触发了
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-
             CharSequence packageName = event.getPackageName();
             CharSequence className = event.getClassName();
             if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(className)) {
+                // 发送EventBus通知  包名和 类名
                 EventBus.getDefault().post(new ActivityChangedEvent(
                         event.getPackageName().toString(),
                         event.getClassName().toString()

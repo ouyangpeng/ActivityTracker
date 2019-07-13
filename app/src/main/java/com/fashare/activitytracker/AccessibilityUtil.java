@@ -3,6 +3,7 @@ package com.fashare.activitytracker;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -10,13 +11,19 @@ import android.widget.Toast;
  */
 public class AccessibilityUtil {
 
+    /**
+     * 判断判断辅助功能是否开启
+     */
     public static boolean checkAccessibility(Context context) {
         // 判断辅助功能是否开启
         if (!AccessibilityUtil.isAccessibilitySettingsOn(context)) {
             // 引导至辅助功能设置页面
-            context.startActivity(
-                    new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-            );
+            try {
+                context.startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+            } catch (Exception e) {
+                context.startActivity(new Intent(Settings.ACTION_SETTINGS));
+                Log.e("AccessibilityUtil","引导至辅助功能设置页面 出错了",e);
+            }
             Toast.makeText(context, "请先开启 \"Activity 栈\" 的辅助功能", Toast.LENGTH_LONG).show();
             return false;
         }

@@ -5,3 +5,24 @@
     android:accessibilityFeedbackType="feedbackGeneric"
     android:accessibilityFlags="flagIncludeNotImportantViews"
     android:description="@string/accessibility_service_description"/>
+
+
+<!--accessibilityEventTypes：响应的事件类型（单击、长按、滑动、通知等），这里当然是全部事件啦-->
+
+<!--accessibilityFeedbackType：回显给用户的方式（例如：配置TTS引擎，实现发音），辅助嘛...-->
+
+<!--accessibilityFlags：很关键，你的应用程序需要获取哪些信息：-->
+    <!--1.flagDefault默认;-->
+    <!--2.flagIncludeNotImportantViews显示所有视图节点（主要是效率，才会有这个属性，如下图FL套LL套TV，如果LL均没有任何可交互的属性（如没点击事件），则这个LL会被当做不重要的视图来处理，没有flagIncludeNotImportantViews属性时FL获取Child时只会得到TV）；-->
+    <!--3.flagReportViewIds允许得到View的ID（对应AccessibilityNodeInfo.getViewIdResourceName()方法，如果不写此属性只会得到空）; 其他标志flagRequestTouchExplorationMode、flagRequestEnhancedWebAccessibility、flagRequestFilterKeyEvents、flagRetrieveInteractiveWindows的具体介绍见AccessibilityServiceInfo类中以FLAG_开头的静态常量-->
+
+<!--canPerformGestures：允许app发送手势（api24及以上才可以使用手势），肯定true了-->
+
+<!--description：描述（会在开启辅助功能页面看到这段文字）-->
+
+<!--notificationTimeout：响应时间间隔100就好了-->
+
+<!--packageNames：需要辅助的app包名（比如博主的只针对wx和系统桌面），不写表示所有app-->
+
+
+

@@ -6,9 +6,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 
-/**
- * Created by jinliangshan on 16/12/26.
- */
 public class TrackerWindowManager {
     private final Context mContext;
     private final WindowManager mWindowManager;
@@ -40,7 +37,6 @@ public class TrackerWindowManager {
         if(mFloatingView == null){
             mFloatingView = new FloatingView(mContext);
             mFloatingView.setLayoutParams(LAYOUT_PARAMS);
-
             mWindowManager.addView(mFloatingView, LAYOUT_PARAMS);
         }
     }
